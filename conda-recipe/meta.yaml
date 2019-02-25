@@ -1,0 +1,31 @@
+package:
+  name: tangram_taladraw
+  version: {{ environ.get('GIT_DESCRIBE_TAG', 'v')[1:] }}
+
+source:
+  path: ../
+
+build:
+  number: {{ environ.get('GIT_DESCRIBE_NUMBER', '0')|int }}
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+
+requirements:
+  host:
+    - python
+  run:
+    - python
+    - pychimera     >=0.2.6
+    - libtangram
+    - bkchem
+
+about:
+  home: http://github.com/insilichem/tangram_taladraw
+  license: GNU General Public License v3
+  license_family: GNU General Public License v3
+
+  summary: 'UCSF Chimera extension to build 3D structures out of two-dimensional sketches'
+
+  description: |
+    UCSF Chimera extension to build 3D structures out of two-dimensional sketches
+  doc_url: http://tangram-suite.readthedocs.io/en/latest/tangram_taladraw.html
+  dev_url: https://github.com/insilichem/tangram_taladraw
