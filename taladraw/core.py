@@ -38,10 +38,10 @@ class Controller(object):
         molecules, _ = self.bk.paper.selected_to_unique_top_levels()
         if molecules:
             self.chimera_smiles_btn['state'] = 'active'
-            self.chimera_coords_btn['state'] = 'active'
+            # self.chimera_coords_btn['state'] = 'active'
         else:
             self.chimera_smiles_btn['state'] = 'disabled'
-            self.chimera_coords_btn['state'] = 'disabled'
+            # self.chimera_coords_btn['state'] = 'disabled'
 
     def bk_selected_molecules(self):
         molecules, _ = self.bk.paper.selected_to_unique_top_levels()
@@ -54,9 +54,16 @@ class Controller(object):
         if not molecules:
             return
         from bkchem.oasa_bridge import mol_to_smiles
+        cmd = self.gui.ui_cmdline.getvalue()
         for m in molecules:
             smiles = mol_to_smiles(m)
-            chimera.runCommand('open smiles:' + smiles)
+            cmol = chimera.openModels.open(smiles, type='SMILES')[0]
+            self.imported_molecules.append(cmol)
+            if cmd:
+                try:
+                    chimera.runCommand(cmd.replace('#$', cmol.oslIdent()))
+                except chimera.UserError as e:
+                    self.gui.status(str(e), color='red', blankAfter=3)
 
     def chimera_coords_btn_cb(self, *args, **kwargs):
         molecules = self.bk_selected_molecules()
@@ -65,7 +72,7 @@ class Controller(object):
         for bk_mol in molecules:
             chi_mol = self._new_chimera_molecule()
             for atom in bk_mol.atoms:
-                a = mol.addAtom(atom.name)
+                a = chi_mol.addAtom(atom.name)
                 a.setCoord(chimera.Point(atom.coords[:2]))
 
     @staticmethod
