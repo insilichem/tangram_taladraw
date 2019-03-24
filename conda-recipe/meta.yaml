@@ -21,7 +21,7 @@ requirements:
 about:
   home: http://github.com/insilichem/tangram_taladraw
   license: GNU General Public License v3
-  license_family: GNU General Public License v3
+  license_family: GPL
 
   summary: 'UCSF Chimera extension to build 3D structures out of two-dimensional sketches'
 
